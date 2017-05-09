@@ -60,8 +60,10 @@ void     cmotion_sendDone(
 
 void cmotion_init() {
 	
-   //if(idmanager_getIsDAGroot()==TRUE) return;
+   if(idmanager_getIsDAGroot()==TRUE) return;
    
+    // job specifically for mote bbbb::1415:92cc:0:3
+   if(idmanager_getMyID(ADDR_16B)->addr_16b[1]!=0x03) return;
    
    //// prepare the resource descriptor for the /cmotion path
    cmotion_vars.desc.path0len            = sizeof(cmotion_path0)-1;
@@ -72,12 +74,10 @@ void cmotion_init() {
    cmotion_vars.desc.discoverable        = TRUE;
    cmotion_vars.desc.callbackRx          = &cmotion_receive;
    cmotion_vars.desc.callbackSendDone    = &cmotion_sendDone;
-   
-    // job specifically for mote bbbb::1415:92cc:0:3
-   if(idmanager_getMyID(ADDR_16B)->addr_16b[1]!=0x03) return;
-   
+      
    // register with the CoAP module
    opencoap_register(&cmotion_vars.desc);
+   
    printf ("inicializo cmotion_init\n");
    
    cmotion_vars.time2Id    = opentimers_start(CMOTIONPERIOD,

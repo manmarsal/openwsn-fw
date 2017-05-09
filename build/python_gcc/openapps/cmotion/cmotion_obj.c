@@ -4,7 +4,7 @@ DO NOT EDIT DIRECTLY!!
 This file was 'objectified' by SCons as a pre-processing
 step for the building a Python extension module.
 
-This was done on 2017-05-09 00:09:53.614428.
+This was done on 2017-05-09 20:27:45.798578.
 */
 /**
 \brief A CoAP resource which allows an application to GET/SET the state of the
@@ -68,8 +68,10 @@ void cmotion_sendDone(OpenMote* self,
 
 void cmotion_init(OpenMote* self) {
 	
-   //if( idmanager_getIsDAGroot(self)==TRUE) return;
+   if( idmanager_getIsDAGroot(self)==TRUE) return;
    
+    // job specifically for mote bbbb::1415:92cc:0:3
+   if( idmanager_getMyID(self, ADDR_16B)->addr_16b[1]!=0x03) return;
    
    //// prepare the resource descriptor for the /cmotion path
    cmotion_vars.desc.path0len            = sizeof(cmotion_path0)-1;
@@ -80,12 +82,10 @@ void cmotion_init(OpenMote* self) {
    cmotion_vars.desc.discoverable        = TRUE;
    cmotion_vars.desc.callbackRx          = &cmotion_receive;
    cmotion_vars.desc.callbackSendDone    = &cmotion_sendDone;
-   
-    // job specifically for mote bbbb::1415:92cc:0:3
-   if( idmanager_getMyID(self, ADDR_16B)->addr_16b[1]!=0x03) return;
-   
+      
    // register with the CoAP module
  opencoap_register(self, &cmotion_vars.desc);
+   
    printf ("inicializo cmotion_init\n");
    
    cmotion_vars.time2Id    = opentimers_start(self, CMOTIONPERIOD,

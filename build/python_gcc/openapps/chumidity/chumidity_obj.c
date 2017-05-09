@@ -4,7 +4,7 @@ DO NOT EDIT DIRECTLY!!
 This file was 'objectified' by SCons as a pre-processing
 step for the building a Python extension module.
 
-This was done on 2017-05-09 01:23:52.891724.
+This was done on 2017-05-09 20:33:12.448154.
 */
 /**
 \brief A CoAP resource which allows an application to GET/SET the state of the
@@ -72,7 +72,10 @@ void chumidity_init(OpenMote* self) {
    if( idmanager_getIsDAGroot(self)==TRUE) return;
    //printf ("antes del init\n");
    
-   resultado = idmanager_getMyID(self, ADDR_16B)->addr_16b[1];
+   //resultado = idmanager_getMyID(self, ADDR_16B)->addr_16b[1];
+   // job specifically for mote bbbb::1415:92cc:0:2
+   
+   if( idmanager_getMyID(self, ADDR_16B)->addr_16b[1]!=0x02) return;
    
    //// prepare the resource descriptor for the /humidity path
    chumidity_vars.desc.path0len            = sizeof(chumidity_path0)-1;
@@ -96,7 +99,7 @@ void chumidity_init(OpenMote* self) {
    // register with the CoAP module
  opencoap_register(self, &chumidity_vars.desc);
    printf ("inicializo chumidity_init\n");
-   printf ("inicializo chumidity_init, dir = %x\n", resultado);
+   //printf ("inicializo chumidity_init, dir = %x\n", resultado);
    
    chumidity_vars.tiempoId    = opentimers_start(self, CTEMPOPERIOD,
                                                 TIMER_PERIODIC,TIME_MS,

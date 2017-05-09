@@ -64,7 +64,10 @@ void chumidity_init() {
    if(idmanager_getIsDAGroot()==TRUE) return;
    //printf ("antes del init\n");
    
-   resultado = idmanager_getMyID(ADDR_16B)->addr_16b[1];
+   //resultado = idmanager_getMyID(ADDR_16B)->addr_16b[1];
+   // job specifically for mote bbbb::1415:92cc:0:2
+   
+   if(idmanager_getMyID(ADDR_16B)->addr_16b[1]!=0x02) return;
    
    //// prepare the resource descriptor for the /humidity path
    chumidity_vars.desc.path0len            = sizeof(chumidity_path0)-1;
@@ -88,7 +91,7 @@ void chumidity_init() {
    // register with the CoAP module
    opencoap_register(&chumidity_vars.desc);
    printf ("inicializo chumidity_init\n");
-   printf ("inicializo chumidity_init, dir = %x\n", resultado);
+   //printf ("inicializo chumidity_init, dir = %x\n", resultado);
    
    chumidity_vars.tiempoId    = opentimers_start(CTEMPOPERIOD,
                                                 TIMER_PERIODIC,TIME_MS,

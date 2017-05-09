@@ -60,8 +60,10 @@ void     ccalef_sendDone(
 
 void ccalef_init() {
  
-   //if(idmanager_getIsDAGroot()==TRUE) return;
+   if(idmanager_getIsDAGroot()==TRUE) return;
    
+   // job specifically for mote bbbb::1415:92cc:0:2
+   if(idmanager_getMyID(ADDR_16B)->addr_16b[1]!=0x02) return;
    
    
    //// prepare the resource descriptor for the /Actuador_Calefaccio path
@@ -79,6 +81,8 @@ void ccalef_init() {
    
    // register with the CoAP module
    opencoap_register(&ccalef_vars.desc);
+   
+   printf ("inicializo ccalef_init\n");
    
    ccalef_vars.time1Id    = opentimers_start(CCALEFPERIOD,
                                                 TIMER_PERIODIC,TIME_MS,
