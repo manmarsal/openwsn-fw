@@ -4,7 +4,7 @@ DO NOT EDIT DIRECTLY!!
 This file was 'objectified' by SCons as a pre-processing
 step for the building a Python extension module.
 
-This was done on 2017-05-01 01:48:59.918735.
+This was done on 2017-05-09 00:19:11.580835.
 */
 /**
 \brief A CoAP resource which allows an application to GET/SET the state of the
@@ -67,8 +67,13 @@ void ctempo_sendDone(OpenMote* self,
 //=========================== public ==========================================
 
 void ctempo_init(OpenMote* self) {
+	
+   if( idmanager_getIsDAGroot(self)==TRUE) return;
+   //printf ("antes del init\n");
+   
+   
  
-   //// prepare the resource descriptor for the /l path
+   //// prepare the resource descriptor for the /temperatura path
    ctempo_vars.desc.path0len            = sizeof(ctempo_path0)-1;
    ctempo_vars.desc.path0val            = (uint8_t*)(&ctempo_path0);
    ctempo_vars.desc.path1len            = 0;
@@ -77,6 +82,9 @@ void ctempo_init(OpenMote* self) {
    ctempo_vars.desc.discoverable        = TRUE;
    ctempo_vars.desc.callbackRx          = &ctempo_receive;
    ctempo_vars.desc.callbackSendDone    = &ctempo_sendDone;
+   
+   //// job specifically for mote bbbb::1415:92cc:0:2
+   //if( idmanager_getMyID(self, ADDR_16B)->addr_16b[1]==0x02) return;
    
    // register with the CoAP module
  opencoap_register(self, &ctempo_vars.desc);

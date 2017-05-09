@@ -4,7 +4,7 @@ DO NOT EDIT DIRECTLY!!
 This file was 'objectified' by SCons as a pre-processing
 step for the building a Python extension module.
 
-This was done on 2017-05-01 11:43:19.553610.
+This was done on 2017-05-09 00:09:39.959671.
 */
 /**
 \brief A CoAP resource which allows an application to GET/SET the state of the
@@ -68,6 +68,10 @@ void ccalef_sendDone(OpenMote* self,
 
 void ccalef_init(OpenMote* self) {
  
+   //if( idmanager_getIsDAGroot(self)==TRUE) return;
+   
+   
+   
    //// prepare the resource descriptor for the /Actuador_Calefaccio path
    ccalef_vars.desc.path0len            = sizeof(ccalef_path0)-1;
    ccalef_vars.desc.path0val            = (uint8_t*)(&ccalef_path0);
@@ -78,13 +82,16 @@ void ccalef_init(OpenMote* self) {
    ccalef_vars.desc.callbackRx          = &ccalef_receive;
    ccalef_vars.desc.callbackSendDone    = &ccalef_sendDone;
    
+   // job specifically for mote bbbb::1415:92cc:0:2
+   if( idmanager_getMyID(self, ADDR_16B)->addr_16b[1]!=0x02) return;
+   
    // register with the CoAP module
  opencoap_register(self, &ccalef_vars.desc);
    
    ccalef_vars.time1Id    = opentimers_start(self, CCALEFPERIOD,
                                                 TIMER_PERIODIC,TIME_MS,
                                                 ccalef_timer_cb);
-   
+
 
 }
 

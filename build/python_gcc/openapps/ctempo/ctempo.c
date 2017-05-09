@@ -59,8 +59,13 @@ void     ctempo_sendDone(
 //=========================== public ==========================================
 
 void ctempo_init() {
+	
+   if(idmanager_getIsDAGroot()==TRUE) return;
+   //printf ("antes del init\n");
+   
+   
  
-   //// prepare the resource descriptor for the /l path
+   //// prepare the resource descriptor for the /temperatura path
    ctempo_vars.desc.path0len            = sizeof(ctempo_path0)-1;
    ctempo_vars.desc.path0val            = (uint8_t*)(&ctempo_path0);
    ctempo_vars.desc.path1len            = 0;
@@ -69,6 +74,9 @@ void ctempo_init() {
    ctempo_vars.desc.discoverable        = TRUE;
    ctempo_vars.desc.callbackRx          = &ctempo_receive;
    ctempo_vars.desc.callbackSendDone    = &ctempo_sendDone;
+   
+   //// job specifically for mote bbbb::1415:92cc:0:2
+   //if(idmanager_getMyID(ADDR_16B)->addr_16b[1]==0x02) return;
    
    // register with the CoAP module
    opencoap_register(&ctempo_vars.desc);

@@ -20,7 +20,7 @@
 //=========================== defines =========================================
 
 ///// inter-packet period (in ms)
-#define CTEMPOPERIOD  100000
+#define CTEMPOPERIOD  1000
 #define PAYLOADLEN      40
 
 //=========================== variables =======================================
@@ -38,6 +38,7 @@ char str[1], int2string[1];
 char aChar;
 
 char digitos[10] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+
 
 //=========================== prototypes ======================================
 
@@ -59,24 +60,39 @@ void     chumidity_sendDone(
 //=========================== public ==========================================
 
 void chumidity_init() {
- 
-   //// prepare the resource descriptor for the /l path
+	   
+   if(idmanager_getIsDAGroot()==TRUE) return;
+   //printf ("antes del init\n");
+   
+   resultado = idmanager_getMyID(ADDR_16B)->addr_16b[1];
+   
+   //// prepare the resource descriptor for the /humidity path
    chumidity_vars.desc.path0len            = sizeof(chumidity_path0)-1;
    chumidity_vars.desc.path0val            = (uint8_t*)(&chumidity_path0);
    chumidity_vars.desc.path1len            = 0;
    chumidity_vars.desc.path1val            = NULL;
    chumidity_vars.desc.componentID         = COMPONENT_CHUMIDITY;
-   chumidity_vars.desc.discoverable        = TRUE;
+   chumidity_vars.desc.discoverable       = TRUE;
    chumidity_vars.desc.callbackRx          = &chumidity_receive;
    chumidity_vars.desc.callbackSendDone    = &chumidity_sendDone;
    
+      ////// job specifically for mote bbbb::1415:92cc:0:2
+   //if(idmanager_getMyID(ADDR_16B)->addr_16b[1]!=0x02) {
+	   
+	   //chumidity_vars.desc.discoverable        = FALSE;
+   //}
+   //else {
+	   //chumidity_vars.desc.discoverable       = TRUE;
+   //}
+
    // register with the CoAP module
    opencoap_register(&chumidity_vars.desc);
+   printf ("inicializo chumidity_init\n");
+   printf ("inicializo chumidity_init, dir = %x\n", resultado);
    
    chumidity_vars.tiempoId    = opentimers_start(CTEMPOPERIOD,
                                                 TIMER_PERIODIC,TIME_MS,
                                                 chumidity_timer_cb);
-   
 
 }
 
@@ -91,22 +107,30 @@ void chumidity_timer_cb(opentimer_id_t id){
 
 void chumidity_task_cb() {
 
-//uint16_t             avg         = 0;
+
+
 
 // don't run if not synch
-   if (ieee154e_isSynch() == FALSE) return;
+if (ieee154e_isSynch() == FALSE) return;
    
-   // don't run on dagroot
-   if (idmanager_getIsDAGroot()) {
-      opentimers_stop(chumidity_vars.tiempoId);
-      return;
-   }
+   //printf ("soy un capullo");
+   
+   ////// job specifically for mote bbbb::1415:92cc:0:2
+//if(idmanager_getMyID(ADDR_16B)->addr_16b[1]!=0x02) {
+	   
+	   //chumidity_vars.desc.discoverable        = FALSE;
+	   //opencoap_register(&chumidity_vars.desc);
 
-
-//avg = openrandom_get16b();
-
+     
+   
+   //// don't run on dagroot
+   //if (idmanager_getIsDAGroot()) {
+      //opentimers_stop(chumidity_vars.tiempoId);
+      //return;
+   //}
 
 }
+
 
 
 int chumidity_openrandomtemp (){

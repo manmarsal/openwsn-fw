@@ -4,7 +4,7 @@ DO NOT EDIT DIRECTLY!!
 This file was 'objectified' by SCons as a pre-processing
 step for the building a Python extension module.
 
-This was done on 2017-05-01 02:09:29.091765.
+This was done on 2017-05-07 18:36:30.477209.
 */
 /**
 \brief A CoAP resource which allows an application to GET/SET the state of the

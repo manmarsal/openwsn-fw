@@ -4,7 +4,7 @@ DO NOT EDIT DIRECTLY!!
 This file was 'objectified' by SCons as a pre-processing
 step for the building a Python extension module.
 
-This was done on 2017-05-01 01:41:25.214752.
+This was done on 2017-05-09 01:23:52.891724.
 */
 /**
 \brief A CoAP resource which allows an application to GET/SET the state of the
@@ -28,7 +28,7 @@ This was done on 2017-05-01 01:41:25.214752.
 //=========================== defines =========================================
 
 ///// inter-packet period (in ms)
-#define CTEMPOPERIOD  100000
+#define CTEMPOPERIOD  1000
 #define PAYLOADLEN      40
 
 //=========================== variables =======================================
@@ -46,6 +46,7 @@ char str[1], int2string[1];
 char aChar;
 
 char digitos[10] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+
 
 //=========================== prototypes ======================================
 
@@ -67,24 +68,39 @@ void chumidity_sendDone(OpenMote* self,
 //=========================== public ==========================================
 
 void chumidity_init(OpenMote* self) {
- 
-   //// prepare the resource descriptor for the /l path
+	   
+   if( idmanager_getIsDAGroot(self)==TRUE) return;
+   //printf ("antes del init\n");
+   
+   resultado = idmanager_getMyID(self, ADDR_16B)->addr_16b[1];
+   
+   //// prepare the resource descriptor for the /humidity path
    chumidity_vars.desc.path0len            = sizeof(chumidity_path0)-1;
    chumidity_vars.desc.path0val            = (uint8_t*)(&chumidity_path0);
    chumidity_vars.desc.path1len            = 0;
    chumidity_vars.desc.path1val            = NULL;
    chumidity_vars.desc.componentID         = COMPONENT_CHUMIDITY;
-   chumidity_vars.desc.discoverable        = TRUE;
+   chumidity_vars.desc.discoverable       = TRUE;
    chumidity_vars.desc.callbackRx          = &chumidity_receive;
    chumidity_vars.desc.callbackSendDone    = &chumidity_sendDone;
    
+      ////// job specifically for mote bbbb::1415:92cc:0:2
+   //if( idmanager_getMyID(self, ADDR_16B)->addr_16b[1]!=0x02) {
+	   
+	   //chumidity_vars.desc.discoverable        = FALSE;
+   //}
+   //else {
+	   //chumidity_vars.desc.discoverable       = TRUE;
+   //}
+
    // register with the CoAP module
  opencoap_register(self, &chumidity_vars.desc);
+   printf ("inicializo chumidity_init\n");
+   printf ("inicializo chumidity_init, dir = %x\n", resultado);
    
    chumidity_vars.tiempoId    = opentimers_start(self, CTEMPOPERIOD,
                                                 TIMER_PERIODIC,TIME_MS,
                                                 chumidity_timer_cb);
-   
 
 }
 
@@ -99,22 +115,30 @@ void chumidity_timer_cb(OpenMote* self, opentimer_id_t id){
 
 void chumidity_task_cb(OpenMote* self) {
 
-//uint16_t             avg         = 0;
+
+
 
 // don't run if not synch
-   if ( ieee154e_isSynch(self) == FALSE) return;
+if ( ieee154e_isSynch(self) == FALSE) return;
    
-   // don't run on dagroot
-   if ( idmanager_getIsDAGroot(self)) {
- opentimers_stop(self, chumidity_vars.tiempoId);
-      return;
-   }
+   //printf ("soy un capullo");
+   
+   ////// job specifically for mote bbbb::1415:92cc:0:2
+//if( idmanager_getMyID(self, ADDR_16B)->addr_16b[1]!=0x02) {
+	   
+	   //chumidity_vars.desc.discoverable        = FALSE;
+	   // opencoap_register(self, &chumidity_vars.desc);
 
-
-//avg = openrandom_get16b(self);
-
+     
+   
+   //// don't run on dagroot
+   //if ( idmanager_getIsDAGroot(self)) {
+      // opentimers_stop(self, chumidity_vars.tiempoId);
+      //return;
+   //}
 
 }
+
 
 
 int chumidity_openrandomtemp(OpenMote* self){

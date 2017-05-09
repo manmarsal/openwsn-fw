@@ -56,6 +56,8 @@ void     cair_sendDone(
 //=========================== public ==========================================
 
 void cair_init() {
+   
+   //if(idmanager_getIsDAGroot()==TRUE) return; 
  
    //// prepare the resource descriptor for the /AC path
    cair_vars.desc.path0len            = sizeof(cair_path0)-1;

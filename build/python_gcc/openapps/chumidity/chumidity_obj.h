@@ -4,7 +4,7 @@ DO NOT EDIT DIRECTLY!!
 This file was 'objectified' by SCons as a pre-processing
 step for the building a Python extension module.
 
-This was done on 2017-05-01 01:33:15.781938.
+This was done on 2017-05-08 22:19:40.208499.
 */
 #ifndef __CHUMIDITY_H
 #define __CHUMIDITY_H
