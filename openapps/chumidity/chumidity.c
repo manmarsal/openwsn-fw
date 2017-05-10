@@ -29,7 +29,7 @@ chumidity_vars_t chumidity_vars;
 
 //random_vars_t random_vars;
 
-const uint8_t chumidity_path0[]       = "humidity";
+const uint8_t chumidity_path0[]       = "humedad";
 
 int min_num, i;
 int max_num;
@@ -48,8 +48,8 @@ owerror_t chumidity_receive(
    coap_option_iht*  coap_options
 );
 
-void    chumidity_timer_cb(opentimer_id_t id);
-void    chumidity_task_cb(void);
+//void    chumidity_timer_cb(opentimer_id_t id);
+//void    chumidity_task_cb(void);
 int     chumidity_openrandomtemp (void);
 
 void     chumidity_sendDone(
@@ -67,7 +67,7 @@ void chumidity_init() {
    //resultado = idmanager_getMyID(ADDR_16B)->addr_16b[1];
    // job specifically for mote bbbb::1415:92cc:0:2
    
-   if(idmanager_getMyID(ADDR_16B)->addr_16b[1]!=0x02) return;
+   //if(idmanager_getMyID(ADDR_16B)->addr_16b[1]!=0x02) return;
    
    //// prepare the resource descriptor for the /humidity path
    chumidity_vars.desc.path0len            = sizeof(chumidity_path0)-1;
@@ -90,12 +90,13 @@ void chumidity_init() {
 
    // register with the CoAP module
    opencoap_register(&chumidity_vars.desc);
-   printf ("inicializo chumidity_init\n");
+   
+   //printf ("inicializo chumidity_init\n");
    //printf ("inicializo chumidity_init, dir = %x\n", resultado);
    
-   chumidity_vars.tiempoId    = opentimers_start(CTEMPOPERIOD,
-                                                TIMER_PERIODIC,TIME_MS,
-                                                chumidity_timer_cb);
+   //chumidity_vars.tiempoId    = opentimers_start(CTEMPOPERIOD,
+                                                //TIMER_PERIODIC,TIME_MS,
+                                                //chumidity_timer_cb);
 
 }
 
@@ -103,36 +104,36 @@ void chumidity_init() {
 
 //timer fired, but we don't want to execute task in ISR mode
 //instead, push task to scheduler with COAP priority, and let scheduler take care of it
-void chumidity_timer_cb(opentimer_id_t id){
-   scheduler_push_task(chumidity_task_cb,TASKPRIO_COAP);
-}
+//void chumidity_timer_cb(opentimer_id_t id){
+//   scheduler_push_task(chumidity_task_cb,TASKPRIO_COAP);
+//}
 
 
-void chumidity_task_cb() {
+////void chumidity_task_cb() {
 
 
 
 
-// don't run if not synch
-if (ieee154e_isSynch() == FALSE) return;
+//// don't run if not synch
+//if (ieee154e_isSynch() == FALSE) return;
    
-   //printf ("soy un capullo");
+   ////printf ("soy un capullo");
    
-   ////// job specifically for mote bbbb::1415:92cc:0:2
-//if(idmanager_getMyID(ADDR_16B)->addr_16b[1]!=0x02) {
+   //////// job specifically for mote bbbb::1415:92cc:0:2
+////if(idmanager_getMyID(ADDR_16B)->addr_16b[1]!=0x02) {
 	   
-	   //chumidity_vars.desc.discoverable        = FALSE;
-	   //opencoap_register(&chumidity_vars.desc);
+	   ////chumidity_vars.desc.discoverable        = FALSE;
+	   ////opencoap_register(&chumidity_vars.desc);
 
      
    
-   //// don't run on dagroot
-   //if (idmanager_getIsDAGroot()) {
-      //opentimers_stop(chumidity_vars.tiempoId);
-      //return;
-   //}
+   ////// don't run on dagroot
+   ////if (idmanager_getIsDAGroot()) {
+      ////opentimers_stop(chumidity_vars.tiempoId);
+      ////return;
+   ////}
 
-}
+//}
 
 
 

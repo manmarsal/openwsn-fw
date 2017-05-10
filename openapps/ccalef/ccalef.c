@@ -47,8 +47,8 @@ owerror_t ccalef_receive(
    coap_option_iht*  coap_options
 );
 
-void    ccalef_timer_cb(opentimer_id_t id);
-void    ccalef_task_cb(void);
+//void    ccalef_timer_cb(opentimer_id_t id);
+//void    ccalef_task_cb(void);
 //int     ccalef_openrandomtemp (void);
 
 void     ccalef_sendDone(
@@ -63,8 +63,9 @@ void ccalef_init() {
    if(idmanager_getIsDAGroot()==TRUE) return;
    
    // job specifically for mote bbbb::1415:92cc:0:2
-   if(idmanager_getMyID(ADDR_16B)->addr_16b[1]!=0x02) return;
-   
+   //if(idmanager_getMyID(ADDR_16B)->addr_16b[1]!=0x02) return;
+   //if(idmanager_getMyID(ADDR_64B)->addr_64b[7]==0x02) return;
+   //if(idmanager_getMyID(ADDR_64B)->addr_64b[7]!=0x02) return;
    
    //// prepare the resource descriptor for the /Actuador_Calefaccio path
    ccalef_vars.desc.path0len            = sizeof(ccalef_path0)-1;
@@ -77,16 +78,16 @@ void ccalef_init() {
    ccalef_vars.desc.callbackSendDone    = &ccalef_sendDone;
    
    // job specifically for mote bbbb::1415:92cc:0:2
-   if(idmanager_getMyID(ADDR_16B)->addr_16b[1]!=0x02) return;
+   //if(idmanager_getMyID(ADDR_16B)->addr_16b[1]!=0x02) return;
    
    // register with the CoAP module
    opencoap_register(&ccalef_vars.desc);
    
-   printf ("inicializo ccalef_init\n");
+   //printf ("inicializo ccalef_init\n");
    
-   ccalef_vars.time1Id    = opentimers_start(CCALEFPERIOD,
-                                                TIMER_PERIODIC,TIME_MS,
-                                                ccalef_timer_cb);
+   //ccalef_vars.time1Id    = opentimers_start(CCALEFPERIOD,
+   //                                             TIMER_PERIODIC,TIME_MS,
+   //                                             ccalef_timer_cb);
 
 
 }
@@ -95,29 +96,29 @@ void ccalef_init() {
 
 //timer fired, but we don't want to execute task in ISR mode
 //instead, push task to scheduler with COAP priority, and let scheduler take care of it
-void ccalef_timer_cb(opentimer_id_t id){
-   scheduler_push_task(ccalef_task_cb,TASKPRIO_COAP);
-}
+//void ccalef_timer_cb(opentimer_id_t id){
+//   scheduler_push_task(ccalef_task_cb,TASKPRIO_COAP);
+//}
 
 
-void ccalef_task_cb() {
+//void ccalef_task_cb() {
 
-//uint16_t             avg         = 0;
+////uint16_t             avg         = 0;
 
-// don't run if not synch
-   if (ieee154e_isSynch() == FALSE) return;
+//// don't run if not synch
+   //if (ieee154e_isSynch() == FALSE) return;
    
-   // don't run on dagroot
-   if (idmanager_getIsDAGroot()) {
-      opentimers_stop(ccalef_vars.time1Id);
-      return;
-   }
+   //// don't run on dagroot
+   //if (idmanager_getIsDAGroot()) {
+      //opentimers_stop(ccalef_vars.time1Id);
+      //return;
+   //}
 
 
-//avg = openrandom_get16b();
+////avg = openrandom_get16b();
 
 
-}
+//}
 
 
 //int ccalef_openrandomtemp (){

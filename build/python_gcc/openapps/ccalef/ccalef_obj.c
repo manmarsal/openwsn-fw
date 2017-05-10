@@ -4,7 +4,7 @@ DO NOT EDIT DIRECTLY!!
 This file was 'objectified' by SCons as a pre-processing
 step for the building a Python extension module.
 
-This was done on 2017-05-09 20:27:31.117717.
+This was done on 2017-05-10 22:02:31.188821.
 */
 /**
 \brief A CoAP resource which allows an application to GET/SET the state of the
@@ -55,8 +55,8 @@ owerror_t ccalef_receive(OpenMote* self,
    coap_option_iht*  coap_options
 );
 
-void ccalef_timer_cb(OpenMote* self, opentimer_id_t id);
-void ccalef_task_cb(OpenMote* self);
+//void ccalef_timer_cb(OpenMote* self, opentimer_id_t id);
+//void ccalef_task_cb(OpenMote* self);
 //int     ccalef_openrandomtemp (void);
 
 void ccalef_sendDone(OpenMote* self, 
@@ -71,8 +71,9 @@ void ccalef_init(OpenMote* self) {
    if( idmanager_getIsDAGroot(self)==TRUE) return;
    
    // job specifically for mote bbbb::1415:92cc:0:2
-   if( idmanager_getMyID(self, ADDR_16B)->addr_16b[1]!=0x02) return;
-   
+   //if( idmanager_getMyID(self, ADDR_16B)->addr_16b[1]!=0x02) return;
+   //if( idmanager_getMyID(self, ADDR_64B)->addr_64b[7]==0x02) return;
+   //if( idmanager_getMyID(self, ADDR_64B)->addr_64b[7]!=0x02) return;
    
    //// prepare the resource descriptor for the /Actuador_Calefaccio path
    ccalef_vars.desc.path0len            = sizeof(ccalef_path0)-1;
@@ -85,16 +86,16 @@ void ccalef_init(OpenMote* self) {
    ccalef_vars.desc.callbackSendDone    = &ccalef_sendDone;
    
    // job specifically for mote bbbb::1415:92cc:0:2
-   if( idmanager_getMyID(self, ADDR_16B)->addr_16b[1]!=0x02) return;
+   //if( idmanager_getMyID(self, ADDR_16B)->addr_16b[1]!=0x02) return;
    
    // register with the CoAP module
  opencoap_register(self, &ccalef_vars.desc);
    
-   printf ("inicializo ccalef_init\n");
+   //printf ("inicializo ccalef_init\n");
    
-   ccalef_vars.time1Id    = opentimers_start(self, CCALEFPERIOD,
-                                                TIMER_PERIODIC,TIME_MS,
-                                                ccalef_timer_cb);
+   //ccalef_vars.time1Id    = opentimers_start(self, CCALEFPERIOD,
+   //                                             TIMER_PERIODIC,TIME_MS,
+   //                                             ccalef_timer_cb);
 
 
 }
@@ -103,29 +104,29 @@ void ccalef_init(OpenMote* self) {
 
 //timer fired, but we don't want to execute task in ISR mode
 //instead, push task to scheduler with COAP priority, and let scheduler take care of it
-void ccalef_timer_cb(OpenMote* self, opentimer_id_t id){
- scheduler_push_task(self, ccalef_task_cb,TASKPRIO_COAP);
-}
+//void ccalef_timer_cb(OpenMote* self, opentimer_id_t id){
+// scheduler_push_task(self, ccalef_task_cb,TASKPRIO_COAP);
+//}
 
 
-void ccalef_task_cb(OpenMote* self) {
+//void ccalef_task_cb(OpenMote* self) {
 
-//uint16_t             avg         = 0;
+////uint16_t             avg         = 0;
 
-// don't run if not synch
-   if ( ieee154e_isSynch(self) == FALSE) return;
+//// don't run if not synch
+   //if ( ieee154e_isSynch(self) == FALSE) return;
    
-   // don't run on dagroot
-   if ( idmanager_getIsDAGroot(self)) {
- opentimers_stop(self, ccalef_vars.time1Id);
-      return;
-   }
+   //// don't run on dagroot
+   //if ( idmanager_getIsDAGroot(self)) {
+      // opentimers_stop(self, ccalef_vars.time1Id);
+      //return;
+   //}
 
 
-//avg = openrandom_get16b(self);
+////avg = openrandom_get16b(self);
 
 
-}
+//}
 
 
 //int ccalef_openrandomtemp (){

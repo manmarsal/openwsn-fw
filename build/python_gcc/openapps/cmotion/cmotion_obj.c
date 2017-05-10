@@ -4,7 +4,7 @@ DO NOT EDIT DIRECTLY!!
 This file was 'objectified' by SCons as a pre-processing
 step for the building a Python extension module.
 
-This was done on 2017-05-09 20:27:45.798578.
+This was done on 2017-05-10 22:02:48.275152.
 */
 /**
 \brief A CoAP resource which allows an application to GET/SET the state of the
@@ -55,8 +55,8 @@ owerror_t cmotion_receive(OpenMote* self,
    coap_option_iht*  coap_options
 );
 
-void cmotion_timer_cb(OpenMote* self, opentimer_id_t id);
-void cmotion_task_cb(OpenMote* self);
+//void cmotion_timer_cb(OpenMote* self, opentimer_id_t id);
+//void cmotion_task_cb(OpenMote* self);
 int cmotion_openrandomtemp(OpenMote* self);
 
 void cmotion_sendDone(OpenMote* self, 
@@ -70,8 +70,8 @@ void cmotion_init(OpenMote* self) {
 	
    if( idmanager_getIsDAGroot(self)==TRUE) return;
    
-    // job specifically for mote bbbb::1415:92cc:0:3
-   if( idmanager_getMyID(self, ADDR_16B)->addr_16b[1]!=0x03) return;
+    //// job specifically for mote bbbb::1415:92cc:0:3
+   //if( idmanager_getMyID(self, ADDR_16B)->addr_16b[1]!=0x03) return;
    
    //// prepare the resource descriptor for the /cmotion path
    cmotion_vars.desc.path0len            = sizeof(cmotion_path0)-1;
@@ -86,11 +86,11 @@ void cmotion_init(OpenMote* self) {
    // register with the CoAP module
  opencoap_register(self, &cmotion_vars.desc);
    
-   printf ("inicializo cmotion_init\n");
+   //printf ("inicializo cmotion_init\n");
    
-   cmotion_vars.time2Id    = opentimers_start(self, CMOTIONPERIOD,
-                                                TIMER_PERIODIC,TIME_MS,
-                                                cmotion_timer_cb);
+   //cmotion_vars.time2Id    = opentimers_start(self, CMOTIONPERIOD,
+                                                //TIMER_PERIODIC,TIME_MS,
+                                                //cmotion_timer_cb);
 
 }
 
@@ -98,29 +98,29 @@ void cmotion_init(OpenMote* self) {
 
 //timer fired, but we don't want to execute task in ISR mode
 //instead, push task to scheduler with COAP priority, and let scheduler take care of it
-void cmotion_timer_cb(OpenMote* self, opentimer_id_t id){
- scheduler_push_task(self, cmotion_task_cb,TASKPRIO_COAP);
-}
+//void cmotion_timer_cb(OpenMote* self, opentimer_id_t id){
+   // scheduler_push_task(self, cmotion_task_cb,TASKPRIO_COAP);
+//}
 
 
-void cmotion_task_cb(OpenMote* self) {
+//void cmotion_task_cb(OpenMote* self) {
 
-//uint16_t             avg         = 0;
+////uint16_t             avg         = 0;
 
-// don't run if not synch
-   if ( ieee154e_isSynch(self) == FALSE) return;
+//// don't run if not synch
+   //if ( ieee154e_isSynch(self) == FALSE) return;
    
-   // don't run on dagroot
-   if ( idmanager_getIsDAGroot(self)) {
- opentimers_stop(self, cmotion_vars.time2Id);
-      return;
-   }
+   //// don't run on dagroot
+   //if ( idmanager_getIsDAGroot(self)) {
+      // opentimers_stop(self, cmotion_vars.time2Id);
+      //return;
+   //}
 
 
-//avg = openrandom_get16b(self);
+////avg = openrandom_get16b(self);
 
 
-}
+//}
 
 
 int cmotion_openrandomtemp(OpenMote* self){

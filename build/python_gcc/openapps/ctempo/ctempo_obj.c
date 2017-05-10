@@ -4,7 +4,7 @@ DO NOT EDIT DIRECTLY!!
 This file was 'objectified' by SCons as a pre-processing
 step for the building a Python extension module.
 
-This was done on 2017-05-09 00:19:11.580835.
+This was done on 2017-05-10 22:13:57.746962.
 */
 /**
 \brief A CoAP resource which allows an application to GET/SET the state of the
@@ -55,8 +55,8 @@ owerror_t ctempo_receive(OpenMote* self,
    coap_option_iht*  coap_options
 );
 
-void ctempo_timer_cb(OpenMote* self, opentimer_id_t id);
-void ctempo_task_cb(OpenMote* self);
+//void ctempo_timer_cb(OpenMote* self, opentimer_id_t id);
+//void ctempo_task_cb(OpenMote* self);
 int ctempo_openrandomtemp(OpenMote* self);
 
 void ctempo_sendDone(OpenMote* self, 
@@ -89,9 +89,9 @@ void ctempo_init(OpenMote* self) {
    // register with the CoAP module
  opencoap_register(self, &ctempo_vars.desc);
    
-   ctempo_vars.tempsId    = opentimers_start(self, CTEMPOPERIOD,
-                                                TIMER_PERIODIC,TIME_MS,
-                                                ctempo_timer_cb);
+   //ctempo_vars.tempsId    = opentimers_start(self, CTEMPOPERIOD,
+                                                //TIMER_PERIODIC,TIME_MS,
+                                                //ctempo_timer_cb);
    
 
 }
@@ -100,29 +100,29 @@ void ctempo_init(OpenMote* self) {
 
 //timer fired, but we don't want to execute task in ISR mode
 //instead, push task to scheduler with COAP priority, and let scheduler take care of it
-void ctempo_timer_cb(OpenMote* self, opentimer_id_t id){
- scheduler_push_task(self, ctempo_task_cb,TASKPRIO_COAP);
-}
+//void ctempo_timer_cb(OpenMote* self, opentimer_id_t id){
+   // scheduler_push_task(self, ctempo_task_cb,TASKPRIO_COAP);
+//}
 
 
-void ctempo_task_cb(OpenMote* self) {
+//void ctempo_task_cb(OpenMote* self) {
 
-//uint16_t             avg         = 0;
+////uint16_t             avg         = 0;
 
-// don't run if not synch
-   if ( ieee154e_isSynch(self) == FALSE) return;
+//// don't run if not synch
+   //if ( ieee154e_isSynch(self) == FALSE) return;
    
-   // don't run on dagroot
-   if ( idmanager_getIsDAGroot(self)) {
- opentimers_stop(self, ctempo_vars.tempsId);
-      return;
-   }
+   //// don't run on dagroot
+   //if ( idmanager_getIsDAGroot(self)) {
+      // opentimers_stop(self, ctempo_vars.tempsId);
+      //return;
+   //}
 
 
-//avg = openrandom_get16b(self);
+////avg = openrandom_get16b(self);
 
 
-}
+//}
 
 
 int ctempo_openrandomtemp(OpenMote* self){

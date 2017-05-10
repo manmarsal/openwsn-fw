@@ -4,7 +4,7 @@ DO NOT EDIT DIRECTLY!!
 This file was 'objectified' by SCons as a pre-processing
 step for the building a Python extension module.
 
-This was done on 2017-05-09 20:33:12.448154.
+This was done on 2017-05-10 22:13:49.677113.
 */
 /**
 \brief A CoAP resource which allows an application to GET/SET the state of the
@@ -37,7 +37,7 @@ chumidity_vars_t chumidity_vars;
 
 // declaration of global variable _random_vars_ removed during objectification.
 
-const uint8_t chumidity_path0[]       = "humidity";
+const uint8_t chumidity_path0[]       = "humedad";
 
 int min_num, i;
 int max_num;
@@ -56,8 +56,8 @@ owerror_t chumidity_receive(OpenMote* self,
    coap_option_iht*  coap_options
 );
 
-void chumidity_timer_cb(OpenMote* self, opentimer_id_t id);
-void chumidity_task_cb(OpenMote* self);
+//void chumidity_timer_cb(OpenMote* self, opentimer_id_t id);
+//void chumidity_task_cb(OpenMote* self);
 int chumidity_openrandomtemp(OpenMote* self);
 
 void chumidity_sendDone(OpenMote* self, 
@@ -75,7 +75,7 @@ void chumidity_init(OpenMote* self) {
    //resultado = idmanager_getMyID(self, ADDR_16B)->addr_16b[1];
    // job specifically for mote bbbb::1415:92cc:0:2
    
-   if( idmanager_getMyID(self, ADDR_16B)->addr_16b[1]!=0x02) return;
+   //if( idmanager_getMyID(self, ADDR_16B)->addr_16b[1]!=0x02) return;
    
    //// prepare the resource descriptor for the /humidity path
    chumidity_vars.desc.path0len            = sizeof(chumidity_path0)-1;
@@ -98,12 +98,13 @@ void chumidity_init(OpenMote* self) {
 
    // register with the CoAP module
  opencoap_register(self, &chumidity_vars.desc);
-   printf ("inicializo chumidity_init\n");
+   
+   //printf ("inicializo chumidity_init\n");
    //printf ("inicializo chumidity_init, dir = %x\n", resultado);
    
-   chumidity_vars.tiempoId    = opentimers_start(self, CTEMPOPERIOD,
-                                                TIMER_PERIODIC,TIME_MS,
-                                                chumidity_timer_cb);
+   //chumidity_vars.tiempoId    = opentimers_start(self, CTEMPOPERIOD,
+                                                //TIMER_PERIODIC,TIME_MS,
+                                                //chumidity_timer_cb);
 
 }
 
@@ -111,36 +112,36 @@ void chumidity_init(OpenMote* self) {
 
 //timer fired, but we don't want to execute task in ISR mode
 //instead, push task to scheduler with COAP priority, and let scheduler take care of it
-void chumidity_timer_cb(OpenMote* self, opentimer_id_t id){
- scheduler_push_task(self, chumidity_task_cb,TASKPRIO_COAP);
-}
+//void chumidity_timer_cb(OpenMote* self, opentimer_id_t id){
+// scheduler_push_task(self, chumidity_task_cb,TASKPRIO_COAP);
+//}
 
 
-void chumidity_task_cb(OpenMote* self) {
+////void chumidity_task_cb(OpenMote* self) {
 
 
 
 
-// don't run if not synch
-if ( ieee154e_isSynch(self) == FALSE) return;
+//// don't run if not synch
+//if ( ieee154e_isSynch(self) == FALSE) return;
    
-   //printf ("soy un capullo");
+   ////printf ("soy un capullo");
    
-   ////// job specifically for mote bbbb::1415:92cc:0:2
-//if( idmanager_getMyID(self, ADDR_16B)->addr_16b[1]!=0x02) {
+   //////// job specifically for mote bbbb::1415:92cc:0:2
+////if( idmanager_getMyID(self, ADDR_16B)->addr_16b[1]!=0x02) {
 	   
-	   //chumidity_vars.desc.discoverable        = FALSE;
-	   // opencoap_register(self, &chumidity_vars.desc);
+	   ////chumidity_vars.desc.discoverable        = FALSE;
+	   //// opencoap_register(self, &chumidity_vars.desc);
 
      
    
-   //// don't run on dagroot
-   //if ( idmanager_getIsDAGroot(self)) {
-      // opentimers_stop(self, chumidity_vars.tiempoId);
-      //return;
-   //}
+   ////// don't run on dagroot
+   ////if ( idmanager_getIsDAGroot(self)) {
+      //// opentimers_stop(self, chumidity_vars.tiempoId);
+      ////return;
+   ////}
 
-}
+//}
 
 
 

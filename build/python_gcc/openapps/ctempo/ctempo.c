@@ -27,7 +27,7 @@
 
 ctempo_vars_t ctempo_vars;
 
-random_vars_t random_vars;
+//random_vars_t random_vars;
 
 const uint8_t ctempo_path0[]       = "temperatura";
 
@@ -47,8 +47,8 @@ owerror_t ctempo_receive(
    coap_option_iht*  coap_options
 );
 
-void    ctempo_timer_cb(opentimer_id_t id);
-void    ctempo_task_cb(void);
+//void    ctempo_timer_cb(opentimer_id_t id);
+//void    ctempo_task_cb(void);
 int     ctempo_openrandomtemp (void);
 
 void     ctempo_sendDone(
@@ -81,9 +81,9 @@ void ctempo_init() {
    // register with the CoAP module
    opencoap_register(&ctempo_vars.desc);
    
-   ctempo_vars.tempsId    = opentimers_start(CTEMPOPERIOD,
-                                                TIMER_PERIODIC,TIME_MS,
-                                                ctempo_timer_cb);
+   //ctempo_vars.tempsId    = opentimers_start(CTEMPOPERIOD,
+                                                //TIMER_PERIODIC,TIME_MS,
+                                                //ctempo_timer_cb);
    
 
 }
@@ -92,29 +92,29 @@ void ctempo_init() {
 
 //timer fired, but we don't want to execute task in ISR mode
 //instead, push task to scheduler with COAP priority, and let scheduler take care of it
-void ctempo_timer_cb(opentimer_id_t id){
-   scheduler_push_task(ctempo_task_cb,TASKPRIO_COAP);
-}
+//void ctempo_timer_cb(opentimer_id_t id){
+   //scheduler_push_task(ctempo_task_cb,TASKPRIO_COAP);
+//}
 
 
-void ctempo_task_cb() {
+//void ctempo_task_cb() {
 
-//uint16_t             avg         = 0;
+////uint16_t             avg         = 0;
 
-// don't run if not synch
-   if (ieee154e_isSynch() == FALSE) return;
+//// don't run if not synch
+   //if (ieee154e_isSynch() == FALSE) return;
    
-   // don't run on dagroot
-   if (idmanager_getIsDAGroot()) {
-      opentimers_stop(ctempo_vars.tempsId);
-      return;
-   }
+   //// don't run on dagroot
+   //if (idmanager_getIsDAGroot()) {
+      //opentimers_stop(ctempo_vars.tempsId);
+      //return;
+   //}
 
 
-//avg = openrandom_get16b();
+////avg = openrandom_get16b();
 
 
-}
+//}
 
 
 int ctempo_openrandomtemp (){

@@ -47,8 +47,8 @@ owerror_t cmotion_receive(
    coap_option_iht*  coap_options
 );
 
-void    cmotion_timer_cb(opentimer_id_t id);
-void    cmotion_task_cb(void);
+//void    cmotion_timer_cb(opentimer_id_t id);
+//void    cmotion_task_cb(void);
 int     cmotion_openrandomtemp (void);
 
 void     cmotion_sendDone(
@@ -62,8 +62,8 @@ void cmotion_init() {
 	
    if(idmanager_getIsDAGroot()==TRUE) return;
    
-    // job specifically for mote bbbb::1415:92cc:0:3
-   if(idmanager_getMyID(ADDR_16B)->addr_16b[1]!=0x03) return;
+    //// job specifically for mote bbbb::1415:92cc:0:3
+   //if(idmanager_getMyID(ADDR_16B)->addr_16b[1]!=0x03) return;
    
    //// prepare the resource descriptor for the /cmotion path
    cmotion_vars.desc.path0len            = sizeof(cmotion_path0)-1;
@@ -78,11 +78,11 @@ void cmotion_init() {
    // register with the CoAP module
    opencoap_register(&cmotion_vars.desc);
    
-   printf ("inicializo cmotion_init\n");
+   //printf ("inicializo cmotion_init\n");
    
-   cmotion_vars.time2Id    = opentimers_start(CMOTIONPERIOD,
-                                                TIMER_PERIODIC,TIME_MS,
-                                                cmotion_timer_cb);
+   //cmotion_vars.time2Id    = opentimers_start(CMOTIONPERIOD,
+                                                //TIMER_PERIODIC,TIME_MS,
+                                                //cmotion_timer_cb);
 
 }
 
@@ -90,29 +90,29 @@ void cmotion_init() {
 
 //timer fired, but we don't want to execute task in ISR mode
 //instead, push task to scheduler with COAP priority, and let scheduler take care of it
-void cmotion_timer_cb(opentimer_id_t id){
-   scheduler_push_task(cmotion_task_cb,TASKPRIO_COAP);
-}
+//void cmotion_timer_cb(opentimer_id_t id){
+   //scheduler_push_task(cmotion_task_cb,TASKPRIO_COAP);
+//}
 
 
-void cmotion_task_cb() {
+//void cmotion_task_cb() {
 
-//uint16_t             avg         = 0;
+////uint16_t             avg         = 0;
 
-// don't run if not synch
-   if (ieee154e_isSynch() == FALSE) return;
+//// don't run if not synch
+   //if (ieee154e_isSynch() == FALSE) return;
    
-   // don't run on dagroot
-   if (idmanager_getIsDAGroot()) {
-      opentimers_stop(cmotion_vars.time2Id);
-      return;
-   }
+   //// don't run on dagroot
+   //if (idmanager_getIsDAGroot()) {
+      //opentimers_stop(cmotion_vars.time2Id);
+      //return;
+   //}
 
 
-//avg = openrandom_get16b();
+////avg = openrandom_get16b();
 
 
-}
+//}
 
 
 int cmotion_openrandomtemp (){
